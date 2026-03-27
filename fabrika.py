@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
@@ -231,10 +231,11 @@ def stat_card(color, lbl, val, sub, src, ico):
 def tcard(title, src, body):
     return f"""<div class="tcard"><h3>{title}</h3><div class="src">📌 {src}</div>{body}</div>"""
 
-# ============= DÜZELTİLMİŞ TABLO FONKSİYONU =============
 def table_html(headers, rows):
     ths = "".join(f"<th>{h}</th>" for h in headers)
-    trs = "".join("<tr>" + "".join(f"<td>{c}</td>" for c in row) + "</tr>" for row in rows)
+    trs = ""
+    for row in rows:
+        trs += "<tr>" + "".join(f"<td>{c}</td>" for c in row) + "</tr>"
     return f'<table class="styled-table"><thead><tr>{ths}</tr></thead><tbody>{trs}</tbody></table>'
 
 def bp(text, color):
@@ -394,10 +395,11 @@ else:
     with st.sidebar:
         st.markdown("""
         <div class="sb-logo" style="padding:24px 16px 20px; border-bottom:1px solid #1e3a5f;">
-          <h2>İHRACAT<br>FABRİKASI</h2>
-          <p>Stratejik İstihbarat</p>
+            <h2>İHRACAT<br>FABRİKASI</h2>
+            <p>Stratejik İstihbarat</p>
         </div>
         """, unsafe_allow_html=True)
+
         st.markdown("<div style='padding:12px 0 4px;'>", unsafe_allow_html=True)
         menu = st.radio("Menü", [
             "📊  Genel Bakış",
@@ -406,16 +408,18 @@ else:
             "📋  İhale Takibi",
             "⚡  DisCo Rehberi",
             "🎯  Lead Listesi",
-            "🏢  Firma Profili",
             "🔍  SerpApi Araması",
             "📱  WhatsApp Taslağı",
             "📧  E-Posta Gönderici",
+            "📑  Tedarikçiler",
+            "📊  İş Konseyi",
         ], label_visibility="collapsed")
         st.markdown("</div>", unsafe_allow_html=True)
+
         st.markdown(f"""
         <div class="sb-footer">
-          <p>🌐 {st.session_state.url[:28]}...</p>
-          <p>📍 Pazar: {st.session_state.pazar}</p>
+            <p>🌐 {st.session_state.url[:28]}...</p>
+            <p>📍 Pazar: {st.session_state.pazar}</p>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
@@ -423,7 +427,7 @@ else:
             st.session_state.giris = False
             st.rerun()
 
-    # Üst bar başlıkları
+    # ====================== ÜST BAR BAŞLIKLARI ======================
     menu_labels = {
         "📊  Genel Bakış": "Genel Bakış — Nijerya Enerji Pazarı",
         "📦  Ticaret Verileri": "Ticaret Verileri & Gümrük Bilgisi",
@@ -431,15 +435,16 @@ else:
         "📋  İhale Takibi": "İhale Takibi & Kaynak Sistemi",
         "⚡  DisCo Rehberi": "DisCo Rehberi — 12 Dağıtım Şirketi",
         "🎯  Lead Listesi": "Lead Listesi — Filtrelenebilir Alıcılar",
-        "🏢  Firma Profili": "Firma Profili — Canlı Web Analizi",
         "🔍  SerpApi Araması": "Google Arama (SerpApi) — Nijerya Odaklı",
         "📱  WhatsApp Taslağı": "WhatsApp Gönderim Taslağı (Demo)",
         "📧  E-Posta Gönderici": "E-Posta Kampanyaları (SMTP)",
+        "📑  Tedarikçiler": "Osun Eyaleti İhale Sonuçları (Canlı Takip)",
+        "📊  İş Konseyi": "İş Konseyi – Excel Tabanlı Firma Listesi",
     }
     st.markdown(f"""
     <div class="topbar">
-      <h1>{menu_labels.get(menu,'')}</h1>
-      <span class="badge">{st.session_state.pazar} Pazarı</span>
+        <h1>{menu_labels.get(menu,'')}</h1>
+        <span class="badge">{st.session_state.pazar} Pazarı</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -487,6 +492,139 @@ else:
         </div>
         """, unsafe_allow_html=True)
 
+        st.markdown('<div class="sec">🇳🇬 Nijerya Pazarı Stratejik Analizi</div>', unsafe_allow_html=True)
+
+        with st.expander("📊 1. Gümrük Rejimi ve Vergilendirme Yapısı", expanded=True):
+            st.markdown("""
+            **Nijerya İthalat Gümrük Rejimi: Vergilendirme Yapısı ve 2025 Vergi Reformları**
+
+            Nijerya'da gümrük vergileri, yerel üretimi teşvik etmek ve ithalat bağımlılığını azaltmak amacıyla stratejik bir araç olarak kullanılmaktadır. Ülkenin 2025 yılı mali takvimine damga vuran "Vergi Reform Yasaları", gümrük süreçlerini dijitalleştirmeyi ve vergi tabanını genişletmeyi hedeflemektedir. Türk ihracatçısı için maliyet analizinin temelini, "Maliyet, Sigorta ve Navlun" (CIF) değeri üzerinden hesaplanan kademeli vergi sistemi oluşturmaktadır.
+
+            **Gümrük Vergisi ve Yan Yükümlülüklerin Hesaplanması**
+
+            Nijerya'da elektrik teçhizatlarının ithalatında uygulanan temel vergi oranları Harmonize Sistem (HS) kodlarına göre değişkenlik göstermektedir. Dağıtım transformatörleri ve hücreler genellikle %5 ile %20 arasında değişen bir "Yüzey Vergisi" (Surface Duty) ile karşılanmaktadır. Ancak, toplam gümrük yükümlülüğü sadece bu oranla sınırlı değildir; çeşitli ek fonlar ve harçlar nihai maliyeti önemli ölçüde artırmaktadır.
+
+            | Vergi/Fon Kalemi | Oran ve Hesaplama Temeli | Fonksiyon ve Açıklama |
+            |------------------|--------------------------|------------------------|
+            | İthalat Vergisi (ID) | %5 - %20 (CIF üzerinden) | Ürün tipine ve kapasitesine göre belirlenen temel tarife. |
+            | Ek Vergi (Surcharge) | İthalat Vergisinin %7'si | Liman altyapısının geliştirilmesi için ayrılan fon. |
+            | CISS (Denetim Ücreti) | FOB değerinin %1'i | Kapsamlı İthalat Denetim Şeması kapsamında alınan hizmet bedeli. |
+            | ETLS (ECOWAS Harcı) | CIF değerinin %0,5'i | Batı Afrika Devletleri Ekonomik Topluluğu liberalizasyon şeması payı. |
+            | Katma Değer Vergisi (VAT) | %7,5 (Toplam Landed Cost üzerinden) | 2025-2030 arasında %15'e kadar kademeli artış öngörülmektedir. |
+
+            **Stratejik Vergi Düzenlemeleri ve Muafiyetler**
+
+            Nijerya hükümeti, enerji açığını kapatmak amacıyla yenilenebilir enerji projelerinde kullanılan bazı ekipmanlara ve "Öncü Sanayi" (Pioneer Status) kapsamındaki yatırımlara gümrük vergisi muafiyetleri tanıyabilmektedir. Megates'in beton köşkleri, eğer büyük ölçekli bir güneş enerjisi santrali projesinin parçası olarak ithal ediliyorsa, Federal Maliye Bakanlığı'ndan özel bir muafiyet belgesi talep edilmesi maliyet avantajı sağlayabilir. Öte yandan, 2025 yılında yürürlüğe giren "Kalkınma Vergisi" (Development Levy), Nijerya'da yerleşik hale gelen yabancı firmaların vergilendirilebilir kârları üzerinden %4 oranında alınmaya başlanmıştır.
+            """)
+
+        with st.expander("🔧 2. Zorunlu Sertifikasyon (SONCAP / NEMSA / NERC)"):
+            st.markdown("""
+            **Zorunlu Sertifikasyon ve Teknik Uygunluk Standartları**
+
+            Nijerya pazarına girişin en kritik bariyeri, teknik engellerin aşılmasıdır. Standartlar Organizasyonu Nijerya (SON) tarafından yürütülen SONCAP programı, ürünlerin güvenliğini ve Nijerya Endüstriyel Standartları (NIS) ile uyumluluğunu garanti altına almaktadır.
+
+            **SONCAP Sertifikasyon Rotaları**
+
+            Megates ürünleri için izlenecek sertifikasyon süreci, ihracat sıklığına ve üreticinin kalite yönetim sistemine bağlı olarak üç farklı rotaya ayrılmaktadır.
+
+            1. **Rota A (Kayıtsız Ürünler):** Genellikle yeni pazara giren veya nadiren sevkiyat yapan firmalar içindir. Her sevkiyat öncesi fiziksel muayene, numune alımı ve test raporu gerektirir. "Ürün Sertifikası 1" (PC1) 6 ay geçerlidir.
+
+            2. **Rota B (Kayıtlı Ürünler):** Düzenli ihracat yapan ve kalite sistemi denetlenmiş firmalar içindir. Sevkiyatların %40'ının fiziksel muayenesini içerir. "Ürün Sertifikası 2" (PC2) 1 yıl geçerlidir.
+
+            3. **Rota C (Lisanslı Ürünler):** Fabrika denetimi tam, yüksek uyumluluk geçmişine sahip üreticiler içindir. Fiziksel muayene sıklığı düşüktür. "Ürün Sertifikası 3" (PC3) 1 yıl geçerlidir.
+
+            | Sertifika Türü | İdari Ücret (ABD Doları) | Geçerlilik Süresi |
+            |----------------|--------------------------|-------------------|
+            | Ürün Sertifikası 1 (PC1) | 500 | 6 Ay |
+            | Ürün Sertifikası 2 (PC2) | 1,000 | 1 Yıl |
+            | Ürün Sertifikası 3 (PC3) | 2,000 | 1 Yıl |
+            | SONCAP Sertifikası (SC) | 350 | Sevkiyat Başına |
+
+            **NEMSA ve NERC Onay Süreçleri**
+
+            Elektrik teçhizatı ihracatında SONCAP tek başına yeterli değildir. Nijerya Elektrik Yönetim Hizmetleri Kurumu (NEMSA), güç sistemlerinin planlanması, tasarımı ve yürütülmesi aşamalarında teknik denetim yetkisine sahiptir. Megates ürünlerinin Nijerya şebekesine (NESI) bağlanabilmesi için tip testlerinin NEMSA tarafından onaylanmış istasyonlarda doğrulanması veya kurum müfettişlerinin denetiminden geçmesi gerekmektedir. Ayrıca, elektrik enerjisi sayaçları ve ilgili parçaların (beton köşk içindeki bazı modüller gibi) ithalatı Nijerya Elektrik Düzenleme Komisyonu (NERC) tarafından verilecek bir "Temizlik Sertifikası"na tabidir.
+            """)
+
+        with st.expander("💰 3. Finansal İşlemler ve Döviz Politikaları"):
+            st.markdown("""
+            **Finansal İşlemler ve Ödeme Şekilleri: Reformist Bir Yaklaşım**
+
+            Nijerya Merkez Bankası (CBN), 2024 ve 2025 yıllarında döviz piyasasını şeffaflaştırmak ve likiditeyi artırmak amacıyla devrim niteliğinde reformlar yapmıştır. Türk ihracatçısı için en büyük risk, döviz kuru dalgalanmaları ve transfer süreçlerindeki bürokrasidir.
+
+            **Döviz Politikaları ve NFEM Süreci**
+
+            Eskiden uygulanan çoklu kur sistemi yerini "Gönüllü Alıcı, Gönüllü Satıcı" modeline dayanan Nijerya Döviz Piyasası'na (NFEM) bırakmıştır. 2025 yılı itibarıyla Naira'nın ABD doları karşısında 1.200 ile 1.600 bandında seyretmesi beklenmektedir. Megates'in tahsilatlarını garanti altına alması için şu mekanizmalar hayati önemdedir:
+
+            - **M Formu (Form M) ve PAAR:** Her ithalat işlemi için M Formu açılması zorunludur. Bu form, döviz tahsisinin ve ithalatın yasallığının temel belgesidir. Sevkiyat öncesi, Nijerya Gümrüğü tarafından düzenlenen Varış Öncesi Değerlendirme Raporu (PAAR), ürünlerin gümrük kıymetini belirler.
+
+            - **Elektronik Döviz Eşleştirme Sistemi (EFEMS):** Kasım 2024'te devreye alınan bu sistem üzerinden bankalar arası spot işlemler minimum 100.000 ABD Doları tutarında gerçekleştirilmektedir.
+
+            - **ISO 20022 Standartları:** Ekim 2025'ten itibaren tüm ödeme sistemleri bu küresel mesajlaşma standardına geçecek olup, ödeme emirlerinin bu yapıya uygun verilmesi gerekmektedir.
+
+            **Tavsiye Edilen Ödeme Yöntemleri**
+
+            Güvenlik gerekçesiyle, Nijerya ile yapılan ticarette "Teyitli Gayrikabili Rücu Akreditif" (Confirmed Irrevocable Letter of Credit) en sağlam yöntem olarak kabul edilmektedir. Ancak, 2025 yılındaki reformlar sonrası likiditeye erişimi olan büyük ölçekli alıcılarla "Vesaik Mukabili" (Documentary Collection) veya nakit ödeme yöntemleri de (CBN'nin belirlediği haftalık 5 milyon Naira nakit çekim limitine dikkat ederek) tartışılabilir. Türk Eximbank'ın sunduğu "Alıcı Kredileri" ve risk sigortası, Megates'in rekabet gücünü artırabilecek finansal kaldıraçlardır.
+            """)
+
+        with st.expander("🚢 4. Lojistik, Liman Yönetimi ve Operasyonel Tuzaklar"):
+            st.markdown("""
+            **Dikkat Edilmesi Gereken Kritik Hususlar ve Operasyonel Tuzaklar**
+
+            Nijerya pazarında başarı, sadece teknik mükemmellikten değil, sahadaki operasyonel risklerin proaktif yönetiminden geçmektedir.
+
+            **Lojistik ve Liman Yönetimi**
+
+            Lagos'taki Apapa ve Tin Can Island limanları, ülkenin dış ticaretinin %70'ini sırtlamaktadır. Ancak bu limanlarda cargo bekleme süresi 2025 yılı itibarıyla ortalama 18-21 gün arasındadır; bu süre küresel ortalamanın %475 üzerindedir.
+
+            - **Demoraj ve Depolama:** Bekleme sürelerinin uzunluğu nedeniyle oluşan yüksek demoraj maliyetleri kâr marjını hızla eritebilir. Lisanslı ve yerel operasyon kabiliyeti yüksek bir gümrükleme acentesi ile çalışmak, sevkiyatın 72 saat içinde gümrükten çekilmesi için kritiktir.
+
+            - **SF6 Gazı Düzenlemeleri:** Megates'in ürettiği kesicilerde kullanılan kükürt hekzaflorür (SF6) gazı, karbondioksitten 25.000 kat daha zararlı kabul edilen bir sera gazıdır. Nijerya'nın 2022'de güncellenen çevre yönetmelikleri, bu gazı içeren ekipmanların ithalatında sıkı kayıt tutma ve sızıntı kontrolü yükümlülüğü getirmektedir.
+
+            **Uluslararası Ticaret Dolandırıcılığı**
+
+            Nijerya, "419" olarak bilinen ön ödeme dolandırıcılığı ve İş E-postası Ele Geçirme (BEC) vakalarının yoğun olduğu bir bölgedir.
+
+            - **Sahte Kamu Belgeleri:** Dolandırıcılar, NAFDAC veya NEMSA gibi kurumların antetli kağıtlarını kullanarak "kayıt ücreti" veya "hızlandırma harcı" talep edebilirler. Hiçbir ödeme, resmi banka kanalları ve doğrulanmış kurumsal hesaplar dışına yapılmamalıdır.
+
+            - **Doğrulama Mekanizması:** Tedarikçi veya alıcı tarafından gönderilen banka detayları değiştiğinde, mutlaka resmi web sitesindeki sabit numaradan sesli onay alınmalıdır.
+            """)
+
+        with st.expander("🏭 5. Sektörel Rekabet – Nijerya Pazarında İlk 10 Firma"):
+            st.markdown("""
+            **Sektörel Rekabet: Nijerya Pazarındaki İlk 10 Rakip Firma**
+
+            Nijerya elektrik teçhizatı pazarı, küresel devler ile yerel montajcıların yoğun rekabetine sahne olmaktadır. 2024-2025 verilerine göre pazarı domine eden aktörler şunlardır:
+
+            | Rakip Firma | Menşei | Pazar Konumu ve Güçlü Yönleri |
+            |-------------|--------|------------------------------|
+            | **Hitachi Energy** | İsviçre | %18 küresel pazar payı; yüksek voltaj ve dijital trafo çözümlerinde lider. |
+            | **Schneider Electric** | Fransa | Dağıtım transformatörleri ve enerji yönetim yazılımlarında (EcoStruxure) çok güçlü. |
+            | **Siemens Energy** | Almanya | HVAC ve açık deniz rüzgar santrali çözümlerinde teknolojik üstünlük. |
+            | **ABB** | İsviçre | Veri merkezleri ve kritik altyapılar için modüler şalt cihazlarında uzman. |
+            | **GE Vernova** | ABD | Büyük ölçekli EPC projeleri ve dayanıklı trafo tasarımları ile tanınıyor. |
+            | **Astor Enerji** | Türkiye | Nijerya'da yaygın ağ; bakır sargılı trafolarda Türk ihracatının öncüsü. |
+            | **Meksan Transformatör** | Türkiye | 50 MVA'ya kadar güç transformatörleri ile Türk rakipleri arasında. |
+            | **TBEA** | Çin | Dev üretim kapasitesi ve agresif fiyat politikasıyla düşük maliyetli segmentte lider. |
+            | **Tranos** | Nijerya | Yerel montaj ve mühendislik kabiliyeti olan güçlü bir yerli teknoloji firması. |
+            | **Collective Power** | Nijerya | Prefabrike trafo merkezleri ve alçak/orta gerilim pano üretiminde uzman yerel oyuncu. |
+
+            Bu rakipler arasında özellikle Çinli üreticiler %38'lik ithalat payı ile en büyük fiyat tehdidini oluştururken, Türk rakipler (Astor ve Meksan) Megates ile benzer bir marka algısı üzerinden rekabet etmektedir.
+            """)
+
+        with st.expander("✅ 6. Stratejik Tavsiyeler ve Yol Haritası"):
+            st.markdown("""
+            **Sonuç ve Stratejik Tavsiyeler**
+
+            Megates Enerji Elektrik'in Nijerya pazarına girişi, sadece bir ürün satışı değil, uzun vadeli bir çözüm ortaklığı olarak kurgulanmalıdır. Nijerya'nın enerji dönüşümü, hibrid sistemleri ve kompakt beton köşkleri destekleyen bir yapıya bürünmektedir. Başarı için ihracatçının; SONCAP süreçlerini Rota B veya C seviyesine yükseltmesi, NEMSA onaylı tip testlerini hazır bulundurması ve Türk Eximbank kredileriyle müşterilerine finansal kolaylık sunması önerilmektedir. Ayrıca, limanlardaki bekleme sürelerini aşmak için Lagos'ta güvenilir bir depolama ve gümrükleme ortağı seçilmesi, operasyonel süreklilik için vazgeçilmezdir. 2026 yılına kadar hedeflenen 5 milyar dolarlık ikili ticaret hacmi, Megates gibi inovatif Türk enerji firmalarının bu pazarın kalıcı bir parçası olması için gerekli diplomatik ve ekonomik zemini sağlamaktadır.
+            """)
+
+        st.markdown("""
+        <div style="background:#0a1a2a; border-left:4px solid #f0b429; padding:15px; margin:20px 0;">
+        <b>Sonuç ve Pazar Öngörüsü</b><br>
+        Nijerya'nın enerji dönüşümü, kompakt beton köşkler ve hibrid sistemleri desteklemektedir. Megates'in pazara girişi, sadece ürün satışı değil, uzun vadeli bir çözüm ortaklığı olarak kurgulanmalıdır. 2026 yılına kadar hedeflenen 5 milyar dolarlık ikili ticaret hacmi, doğru strateji ile yakalanabilir.
+        </div>
+        """, unsafe_allow_html=True)
+
     elif menu == "📦  Ticaret Verileri":
         stat_cards, table_rows, rakip_items, fiyat_items, lojistik_items = get_trade_data()
         stats_html = "".join(stat_card(c["color"], c["lbl"], c["val"], c["sub"], c["src"], c["ico"]) for c in stat_cards)
@@ -499,13 +637,13 @@ else:
         lojistik_html = "".join(ii_item(i['dot'], i['text']) for i in lojistik_items)
         st.markdown(f"""
         <div class="irow">
-          <div class="icard"><h3>📊 Rekip Analizi (2025)</h3>{rakip_html}</div>
+          <div class="icard"><h3>📊 Rekabet Analizi (2025)</h3>{rakip_html}</div>
           <div class="icard"><h3>💰 Fiyatlandırma Stratejisi</h3>{fiyat_html}</div>
           <div class="icard"><h3>🚢 Operasyonel Lojistik</h3>{lojistik_html}</div>
         </div>
         """, unsafe_allow_html=True)
 
-        # FUAR BÖLÜMÜ
+        # Fuar bölümü
         st.markdown('<div class="sec">📅 Nijerya Enerji Sektörü Fuarları (2024-2030)</div>', unsafe_allow_html=True)
         fair_data = [
             {"name": "Nigeria Energy (formerly Power Nigeria)", "date": "27-29 Ekim 2026", "location": "Landmark Centre, Lagos", "focus": "Güç iletimi, dağıtım, yenilenebilir enerji, depolama", "key_products": "Trafo, AG/OG panolar, kesiciler, solar sistemler, bataryalar", "website": "https://www.nigeria-energy.com"},
@@ -596,6 +734,57 @@ else:
             </div>
             """, unsafe_allow_html=True)
 
+        # Canlı ihale arama (SerpApi)
+        st.markdown('<div class="sec">🔍 Canlı İhale Araması (SerpApi)</div>', unsafe_allow_html=True)
+
+        keyword = st.text_input("Aramak istediğiniz ürün / hizmet", placeholder="Örn: transformer, substation, switchgear")
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            src_global = st.checkbox("GlobalTenders", value=True)
+            src_pp = st.checkbox("publicprocurement.ng", value=True)
+        with col2:
+            src_tcn = st.checkbox("TCN", value=True)
+            src_nerc = st.checkbox("NERC", value=True)
+        with col3:
+            src_other = st.checkbox("Diğer (site alanı)", value=False)
+            other_site = st.text_input("Özel site (opsiyonel)", placeholder="örnek: rea.gov.ng", disabled=not src_other)
+
+        if st.button("🔎 İhaleleri Ara", type="primary") and keyword:
+            sources = []
+            if src_global: sources.append("globaltenders.com")
+            if src_pp: sources.append("publicprocurement.ng")
+            if src_tcn: sources.append("tcn.org.ng")
+            if src_nerc: sources.append("nerc.gov.ng")
+            if src_other and other_site:
+                sources.append(other_site)
+
+            if not sources:
+                st.warning("Lütfen en az bir kaynak seçin.")
+            else:
+                with st.spinner(f"'{keyword}' için {len(sources)} kaynakta aranıyor..."):
+                    all_results = []
+                    for site in sources:
+                        query = f"site:{site} {keyword} tender OR procurement"
+                        results, error = serpapi_search_ng(query, num_results=10)
+                        if error:
+                            st.error(f"{site} hatası: {error}")
+                        else:
+                            for r in results:
+                                all_results.append({
+                                    "kaynak": site,
+                                    "başlık": r["title"],
+                                    "link": r["link"],
+                                    "özet": r["snippet"][:200] + "..." if len(r["snippet"]) > 200 else r["snippet"]
+                                })
+                    if all_results:
+                        st.success(f"✅ {len(all_results)} ihale duyurusu bulundu.")
+                        table_rows = [[r["kaynak"], r["başlık"], f'<a href="{r["link"]}" target="_blank" class="lnk">{r["link"]}</a>', r["özet"]] for r in all_results]
+                        body = table_html(["Kaynak", "Başlık", "Link", "Özet"], table_rows)
+                        st.markdown(tcard(f"🔎 '{keyword}' için ihale sonuçları", "SerpApi ile canlı arama", body), unsafe_allow_html=True)
+                    else:
+                        st.info("Hiç sonuç bulunamadı.")
+
     elif menu == "⚡  DisCo Rehberi":
         st.markdown('<div class="sec">12 DisCo — Tam İletişim & Tedarikçi Bilgisi</div>', unsafe_allow_html=True)
         disco_rows = [
@@ -646,20 +835,6 @@ else:
         count_txt = f"{len(filtered)} lead gösteriliyor"
         body = f'<p style="font-size:11px;color:#7a9bb5;margin-bottom:10px;">{count_txt}</p>' + table_html(["Firma / Kurum","Tip","Şehir","E-posta","Web","Öncelik"], rows)
         st.markdown(tcard("🎯 Stratejik Alıcı ve Ortak Listesi","Excel ve mevcut verilerin birleşimi — Mart 2025", body), unsafe_allow_html=True)
-
-    elif menu == "🏢  Firma Profili":
-        st.markdown('<div class="sec">Canlı Web Analizi</div>', unsafe_allow_html=True)
-        if st.session_state.durum == "OK" and st.session_state.veriler:
-            items_html = "".join(f'<div class="ii"><div class="dot"></div><p>{v}</p></div>' for v in st.session_state.veriler)
-            body = f"""
-            <p><b>🌐 Analiz Edilen Site:</b> <a href="{st.session_state.url}" class="lnk" target="_blank">{st.session_state.url} ↗</a></p>
-            <br>{items_html}
-            """
-            st.markdown(tcard("🔍 Siteden Çekilen Canlı Ürün / Hizmet Verileri", "BeautifulSoup web kazıma — anlık veri", body), unsafe_allow_html=True)
-        else:
-            st.markdown(f"""
-            <div class="tc"><div class="tt" style="color:#e74c3c;">⚠️ Veri Çekilemedi</div><div class="tm"><span>{st.session_state.durum}</span></div></div>
-            """, unsafe_allow_html=True)
 
     elif menu == "🔍  SerpApi Araması":
         st.markdown('<div class="sec">SerpApi ile Nijerya Pazarı Araması</div>', unsafe_allow_html=True)
@@ -793,23 +968,23 @@ else:
                 else:
                     st.warning("Kampanya adı, konu ve mesaj zorunludur.")
 
-            if st.session_state.email_campaigns:
-                st.markdown("#### Mevcut Kampanyalar")
-                for i, camp in enumerate(st.session_state.email_campaigns):
-                    col1, col2, col3, col4 = st.columns([3,1,1,1])
-                    with col1:
-                        st.write(f"**{camp['name']}** (ID: {camp['id']})")
-                    with col2:
-                        st.write(f"Aktif: {'✅' if camp['enabled'] else '❌'}")
-                    with col3:
-                        if st.button(f"Sil", key=f"del_{camp['id']}"):
-                            st.session_state.email_campaigns.pop(i)
-                            save_campaigns(st.session_state.email_campaigns)
-                            st.rerun()
-                    with col4:
-                        if st.button(f"Düzenle", key=f"edit_{camp['id']}"):
-                            st.info("Düzenleme henüz eklenmedi.")
-                st.write("---")
+        if st.session_state.email_campaigns:
+            st.markdown("#### Mevcut Kampanyalar")
+            for i, camp in enumerate(st.session_state.email_campaigns):
+                col1, col2, col3, col4 = st.columns([3,1,1,1])
+                with col1:
+                    st.write(f"**{camp['name']}** (ID: {camp['id']})")
+                with col2:
+                    st.write(f"Aktif: {'✅' if camp['enabled'] else '❌'}")
+                with col3:
+                    if st.button(f"Sil", key=f"del_{camp['id']}_{i}"):
+                        st.session_state.email_campaigns.pop(i)
+                        save_campaigns(st.session_state.email_campaigns)
+                        st.rerun()
+                with col4:
+                    if st.button(f"Düzenle", key=f"edit_{camp['id']}_{i}"):
+                        st.info("Düzenleme henüz eklenmedi.")
+            st.write("---")
 
         st.markdown("### 📎 E-posta Listesi Yükle")
         uploaded_email_file = st.file_uploader("Excel/CSV dosyası", type=["csv","xlsx"],
@@ -951,6 +1126,155 @@ else:
             st.bar_chart(daily.set_index("date"))
         else:
             st.info("Henüz gönderim yapılmamış.")
+
+    elif menu == "📑  Tedarikçiler":
+        st.markdown('<div class="sec">📑 Osun Eyaleti İhale Sonuçları – Canlı Takip</div>', unsafe_allow_html=True)
+
+        if "osun_data" not in st.session_state:
+            st.session_state.osun_data = None
+        if "osun_hash" not in st.session_state:
+            st.session_state.osun_hash = None
+
+        def fetch_osun_contracts():
+            url = "https://egp.osunstate.gov.ng/awarded_contracts.php"
+            try:
+                headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+                r = requests.get(url, headers=headers, timeout=15)
+                r.encoding = 'utf-8'
+                soup = BeautifulSoup(r.text, "html.parser")
+                table = soup.find("table")
+                if not table:
+                    st.error("Sayfada tablo bulunamadı.")
+                    return None
+                rows = table.find_all("tr")
+                data = []
+                for row in rows:
+                    cols = row.find_all(["td", "th"])
+                    cols = [col.get_text(strip=True) for col in cols]
+                    if cols:
+                        data.append(cols)
+                if not data:
+                    st.error("Tablo boş.")
+                    return None
+                headers = data[0]
+                rows_data = data[1:]
+                df = pd.DataFrame(rows_data, columns=headers)
+                return df
+            except Exception as e:
+                st.error(f"Veri çekilirken hata: {e}")
+                return None
+
+        col1, col2 = st.columns([1, 5])
+        with col1:
+            refresh = st.button("🔄 Yenile", type="primary")
+        with col2:
+            st.markdown("*Sayfa her yüklendiğinde otomatik kontrol edilir.*")
+
+        if refresh or st.session_state.osun_data is None:
+            with st.spinner("Veriler çekiliyor..."):
+                df = fetch_osun_contracts()
+                if df is not None:
+                    current_hash = hash(df.to_string())
+                    if st.session_state.osun_hash is not None and st.session_state.osun_hash != current_hash:
+                        old_df = st.session_state.osun_data
+                        merged = df.merge(old_df, how='left', indicator=True)
+                        df['yeni'] = merged['_merge'] == 'left_only'
+                    else:
+                        df['yeni'] = False
+                    st.session_state.osun_data = df
+                    st.session_state.osun_hash = current_hash
+                    st.rerun()
+        else:
+            df = st.session_state.osun_data
+
+        if df is not None and not df.empty:
+            def highlight_new(row):
+                if row.get('yeni', False):
+                    return ['background-color: #2a5a2a; color: white'] * len(row)
+                return [''] * len(row)
+
+            styled_df = df.style.apply(highlight_new, axis=1)
+            st.dataframe(styled_df, use_container_width=True)
+
+            new_count = df['yeni'].sum() if 'yeni' in df.columns else 0
+            if new_count > 0:
+                st.success(f"✅ {new_count} yeni ihale sonucu tespit edildi! (Yeşil ile vurgulanmıştır)")
+            else:
+                st.info("Yeni ihale sonucu bulunmamaktadır.")
+        else:
+            st.warning("Veri alınamadı veya tablo boş.")
+
+    elif menu == "📊  İş Konseyi":
+        st.markdown('<div class="sec">📊 İş Konseyi – Excel Tabanlı Firma Listesi</div>', unsafe_allow_html=True)
+
+        EXCEL_PATH = "data/is_konseyi.xlsx"
+
+        if "is_konseyi_df" not in st.session_state:
+            st.session_state.is_konseyi_df = None
+
+        uploaded_excel = st.file_uploader("📂 Excel dosyasını yükleyin (opsiyonel)", type=["xlsx", "xls"], key="is_konseyi_upload")
+        use_default = st.checkbox("Varsayılan dosyayı kullan (data/is_konseyi.xlsx)", value=True)
+
+        def load_excel(file_path):
+            try:
+                if os.path.exists(file_path):
+                    df = pd.read_excel(file_path)
+                    df.columns = [str(col).strip() for col in df.columns]
+                    return df
+                else:
+                    st.warning(f"Dosya bulunamadı: {file_path}")
+                    return None
+            except Exception as e:
+                st.error(f"Dosya okuma hatası: {e}")
+                return None
+
+        if uploaded_excel is not None:
+            try:
+                df = pd.read_excel(uploaded_excel)
+                df.columns = [str(col).strip() for col in df.columns]
+                st.session_state.is_konseyi_df = df
+                st.success(f"{len(df)} satır yüklendi (yüklenen dosya).")
+            except Exception as e:
+                st.error(f"Yüklenen dosya okunamadı: {e}")
+        elif use_default:
+            if st.session_state.is_konseyi_df is None or st.button("🔄 Excel'i Yeniden Oku"):
+                with st.spinner("Excel okunuyor..."):
+                    df = load_excel(EXCEL_PATH)
+                    if df is not None:
+                        st.session_state.is_konseyi_df = df
+                        st.success(f"{len(df)} satır yüklendi (varsayılan dosya).")
+        else:
+            st.info("Lütfen bir Excel dosyası yükleyin veya varsayılan dosyayı kullanın.")
+
+        if st.session_state.is_konseyi_df is not None:
+            df = st.session_state.is_konseyi_df.copy()
+
+            st.markdown("#### Filtreleme")
+            search_col = st.selectbox("Sütun seçin", options=["(Tümü)"] + list(df.columns))
+            search_term = st.text_input("Arama terimi", placeholder="Aranacak kelime...")
+
+            if search_term:
+                if search_col == "(Tümü)":
+                    mask = df.apply(lambda row: row.astype(str).str.contains(search_term, case=False).any(), axis=1)
+                else:
+                    mask = df[search_col].astype(str).str.contains(search_term, case=False)
+                filtered_df = df[mask]
+            else:
+                filtered_df = df
+
+            st.markdown(f"**Toplam {len(filtered_df)} kayıt gösteriliyor** (tümü: {len(df)})")
+
+            st.dataframe(filtered_df, use_container_width=True)
+
+            csv = filtered_df.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📥 Filtrelenmiş veriyi CSV olarak indir",
+                data=csv,
+                file_name='is_konseyi_filtre.csv',
+                mime='text/csv',
+            )
+        else:
+            st.warning("Veri yüklenemedi. Lütfen bir Excel dosyası sağlayın.")
 
     # Footer
     st.markdown("""
